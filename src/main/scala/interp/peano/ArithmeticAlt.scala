@@ -113,7 +113,6 @@ object ArithmeticAlt :
     )
     val a : NMul[_3,_3,nat[9]] = prodev[_3,_3]
     val b : NAdd[_3,_3,_6] = sumev[_3,_3]
-    //looks like forcing the result type is still slow
     val c : NMul[nat[3],nat[9],nat[27]] = prodev[nat[3],nat[9]] 
     val d : NAdd[nat[2],nat[6],nat[8]] = summandr[nat[2],nat[8]]
     val twentyseven : Mul[nat[3],nat[9]] = nat[27] 
