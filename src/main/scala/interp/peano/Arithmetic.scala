@@ -1,6 +1,6 @@
 package interp.peano
 
-import scala.compiletime.{summonFrom, error, erasedValue, S, summonInline}
+import scala.compiletime.{summonFrom, error, erasedValue, summonInline}
 import scala.util.NotGiven
 
 object Arithmetic :

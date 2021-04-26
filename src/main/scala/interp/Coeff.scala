@@ -167,7 +167,7 @@ object CoEffVector :
     inline def cat[m <: Int, n <: Int](v1 : Vec[m], v2 : Vec[n]): Vec[m ⟐ n] = magic(v1 ++ v2)
 
   given instance[C : CoEffScalar] : CoEffVectorAlg[C] with { override val C : CoEffScalar[C] = summon }
-  def tests[C](using Alg : CoEffVectorAlg[C]) =
+  /*def tests[C](using Alg : CoEffVectorAlg[C]) =
     import Alg._
     import Alg.C._
 
@@ -186,7 +186,7 @@ object CoEffVector :
     println("#### Dataflow ####")
     tests(using instance(using DataflowSc))
     println("#### Liveness ####")
-    tests(using instance(using LivenessSc))
+    tests(using instance(using LivenessSc))*/
 
 
 

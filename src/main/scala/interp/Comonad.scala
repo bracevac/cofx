@@ -1,7 +1,7 @@
 package interp
 
 import scala.compiletime.ops.int._
-import scala.compiletime.{S, summonFrom, error, erasedValue}
+import scala.compiletime.{summonFrom, error, erasedValue}
 import Common._
 
 /**

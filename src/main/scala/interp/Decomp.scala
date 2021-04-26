@@ -1,9 +1,9 @@
 package interp
 
-import scala.compiletime.{summonFrom, error, erasedValue, S, summonInline}
+import scala.compiletime.{summonFrom, error, erasedValue, summonInline}
 import scala.util.NotGiven
 /**
- * A study on how to express coeffect scalar splitting at the type and term level. 
+ * A study on how to express coeffect scalar splitting at the type and term level.
  */
 object Decomp :
   private[this] def magic[A,B](a : A): B = a.asInstanceOf[B]
@@ -218,6 +218,7 @@ object Decomp :
       v1 zip v1,
       v1.dup[_2,_3] zip v1.dup[_2,_3],
       CNil.dup[_5,EmptyTuple],
+      "Dup",
       c,//D[3,(6,4,2)](Int x Int x String) 
       c.dup[nat[2], (_3,_2,_1)], //FIXME: annoying that the (_3,_2,_1) has to be specified too
       c.dup[nat[1], (_6,_4,_2)].dup[nat[1],nat[1] *: EmptyTuple].dup[nat[1],nat[1] *: EmptyTuple].dup[nat[1],nat[1] *: EmptyTuple],

@@ -5,7 +5,7 @@ import scala.language.{higherKinds, implicitConversions}
 import scala.util.NotGiven
 import scala.compiletime.summonFrom
 import scala.compiletime.ops.int._
-import scala.compiletime.{constValue, S}
+import scala.compiletime.{constValue}
 
 //Track effects as type-level lists of type constructors
 object Eff :

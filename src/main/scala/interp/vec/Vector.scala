@@ -4,7 +4,7 @@ package interp.vec
 import scala.annotation.nowarn
 import scala.compiletime.ops.int._
 import scala.compiletime.ops.boolean._
-import scala.compiletime.{S, summonFrom, error, erasedValue}
+import scala.compiletime.{summonFrom, error, erasedValue}
 import scala.util.NotGiven
 
 object Vectors :
