@@ -16,7 +16,7 @@ lazy val root = project
     name := "cofx",
     version := "0.1.0",
     scalaVersion := "3.0.0-RC2",
-    useScala3doc := true 
+    useScala3doc := true,
     libraryDependencies += "ch.qos.logback" % "logback-classic" % "1.2.3",
     libraryDependencies += ("org.scalafx" %% "scalafx" % "15.0.1-R21").withDottyCompat(scalaVersion.value),
     libraryDependencies ++= javaFXModules.map { m =>
