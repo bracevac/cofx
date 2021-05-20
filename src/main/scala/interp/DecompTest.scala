@@ -30,8 +30,8 @@ object DecompNew :
     trait Add[A<:S,B<:S,C<:S]
     trait Mul[A<:S,B<:S,C<:S]
 
-    case class CSAddZ[r<:S]() extends Add[zero, r, r]
-    case class CSAddStep[l <: S, r <: S, res <:S](prev : Add[l,r,res]) extends Add[Suc[l], r, Suc[res]]
+    //case class CSAddZ[r<:S]() extends Add[zero, r, r]
+    //case class CSAddStep[l <: S, r <: S, res <:S](prev : Add[l,r,res]) extends Add[Suc[l], r, Suc[res]]
 
 end DecompNew
   
