@@ -60,14 +60,17 @@ object DecompNew :
 
   trait Ctx
 
-  /* S: 
-  trait CoeffShape[S, C]:
+
+  trait CoeffVec[C, n <: C, S]:
 
     type zero <: S
     type one <: S
 
-    def dup[C](using CoeffScalar[C].Add): CoeffShape[S]
-    //def extract(s: S): CoeffScalar[C]*/
+    val scalar: CoeffScalar[C]
+
+    def dup[l <: C, r <: C](using scalar.Mul[l, r, n]): CoeffVec[C, l, CoeffVec[C, l, S]]
+    def extract(using NotGiven[n =:= scalar.zero]): S
+    def map[U >: S, V](f: U => V): CoeffVec[C, n, V]
 
 
 end DecompNew
