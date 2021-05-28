@@ -59,16 +59,15 @@ object DecompNew :
       given mulstep[l <: Int, r <:Int, res <:Int, sum <:Int](using prev : Mul[l,S[r],res], add : Add[S[r],res,sum]) : Mul[S[l],S[r],sum] = NMulStep(add,prev)
 
 
-  trait IndexedComonad[C, n <: C, S]:
+  trait IndexedComonad[S, D[_ <:S, _]](using val s: CoeffScalar[S]):
 
     type zero <: S
     type one <: S
 
-    val scalar: CoeffScalar[C]
 
-    def dup[l <: C, r <: C](using scalar.Mul[l, r, n]): IndexedComonad[C, l, IndexedComonad[C, l, S]]
-    def extract(using NotGiven[n =:= scalar.zero]): S
-    def map[U >: S, V](f: U => V): IndexedComonad[C, n, V]
+    def dup[i <: S, j <: S, n <: S, T](d: D[n, T])(using s.Mul[i, j, n]): D[i, D[j, T]]
+    def extract[n <: S, T](d : D[n,T])(using NotGiven[n =:= s.zero]): T
+    def map[n <: S, A, B](d : D[n,A], f : A => B) : D[n,B]
   
 
   trait Ctx
