@@ -65,9 +65,15 @@ object DecompNew :
     def extract[n <: S, T](d : D[n,T])(using NotGiven[n =:= s.zero]): T
     def map[n <: S, A, B](d : D[n,A], f : A => B) : D[n,B]
   
-
-  trait Ctx
-
+  
+  import Tuple._
+  sealed trait MapEv[F <: Tuple, I <: Tuple, O <: Tuple]
+  case object EmptyEv extends MapEv[EmptyTuple, EmptyTuple, EmptyTuple]
+  case class Cons[A, B, F <: A => B, R <: Tuple, S <: Tuple, T <: Tuple](prev:  MapEv[R, S, T]) extends MapEv[F *: R, A *: S, B *: T]
+  
+  trait Ctx[R <: Tuple, S <: Tuple]:
+    import Tuple._
+    def fmap[F <: Tuple, I <: Tuple, O <: Tuple](f: F)(using ev: MapEv[F, I, O]): Ctx[R, O]
 
 end DecompNew
   
