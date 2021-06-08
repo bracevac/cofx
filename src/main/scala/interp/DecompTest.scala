@@ -89,13 +89,13 @@ object DecompNew :
   case class Cat2Suc[R1<:Tuple,R2<:Tuple,R12<:Tuple,A1<:Tuple,A2<:Tuple,A12<:Tuple,S,X](prev: Cat2R[R1,R2,A1,A2,R12,A12]) extends Cat2R[S *: R1, R2, X *: A1, A2, S *: R12, X *: A12]
   given cat2s[R1<:Tuple,R2<:Tuple,R12<:Tuple,A1<:Tuple,A2<:Tuple,A12<:Tuple,S,X](using prev : Cat2R[R1,R2,A1,A2,R12,A12]) : Cat2R[S *: R1, R2, X *: A1, A2, S *: R12, X *: A12] = Cat2Suc(prev)
   
-  trait Ctx[V <: Tuple, R <: Tuple, S](using val sm: ScalarMul[S]):
-    def fmap[F <: Tuple, O <: Tuple](f: F)(using ev: MapEv[F, R, O]): Ctx[V, O, S]
+  trait Ctx[S, R <: Tuple, V <: Tuple](using val sm: ScalarMul[S]):
+    def fmap[F <: Tuple, O <: Tuple](f: F)(using ev: MapEv[F, R, O]): Ctx[S, O, V]
     //Definitely unsafe
     def extract[n <: Int](using notZero: n > 0): Elem[V, n]
-    def dup[r <: S, I <: Tuple](using smEv: sm.ScalarMul[r,I,R]): Ctx[Tup1[r], Tup1[Ctx[I,V,S]], S] 
-    def m[R2<:Tuple,V2<:Tuple,R3<:Tuple,V3<:Tuple](that : Ctx[R2, V2, S])(using Cat2R[R,R2,V,V2,R3,V3]): Ctx[R3, V3, S]
-    def n[R1<:Tuple,R2<:Tuple,V1<:Tuple,V2<:Tuple](using Cat2R[R1,R2,V1,V2,R,V]): (Ctx[R1,V1, S], Ctx[R2,V2, S])
+    def dup[r <: S, I <: Tuple](using smEv: sm.ScalarMul[r,I,R]): Ctx[S, Tup1[r], Tup1[Ctx[S,I,V]]] 
+    def m[R2<:Tuple,V2<:Tuple,R3<:Tuple,V3<:Tuple](that : Ctx[S,R2,V2])(using Cat2R[R,R2,V,V2,R3,V3]): Ctx[S,R3,V3]
+    def n[R1<:Tuple,R2<:Tuple,V1<:Tuple,V2<:Tuple](using Cat2R[R1,R2,V1,V2,R,V]): (Ctx[S,R1,V1], Ctx[S,R2,V2])
 
 
 end DecompNew
