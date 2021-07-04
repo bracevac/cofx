@@ -2,10 +2,13 @@ package interp
 
 import DecompNew._
 import scala.compiletime.ops.int._
+import scala.util.NotGiven
+import scala.compiletime.{summonFrom, error, erasedValue, summonInline}
+
 
 object Scalars: 
 
-    object NatScalar extends CoeffScalar[Int]:
+    implicit object NatScalar extends CoeffScalar[Int]:
         type zero = 0
         type one = 1
 
@@ -29,10 +32,36 @@ object Scalars:
             given mulstep[l <: Int, r <:Int, res <:Int, sum <:Int](using prev : Mul[l,S[r],res], add : Add[S[r],res,sum]) : Mul[S[l],S[r],sum] = NMulStep(add,prev)
         
 
-object Vectors:
+object Vectors extends App:
 
-    class VecIC[n <: Int, T]:
-        def toString = ???
     import Scalars._
-    summon[CoeffScalar[Int]]
-    class BnReuseShape extends IndexedComonad[Int, BnReuseIC]
+
+    trait VecIC[n <: Int, T](using val s: CoeffScalar[Int]):
+        def take[i<:Int,j<:Int](using this.s.Add[i, j, n]): VecIC[i,T]
+        def drop[i<:Int,j<:Int](using this.s.Add[i, j, n]): VecIC[j,T]
+        //def dup[i<:Nat,j<:Nat](using mul : NMul[i,j,n]): VecIC[i, VecIC[j,T]] = mul match
+        //    case NMulZLeft(j)        => VNil
+        //    case NMulStep(prev,add)  => VCons(take(using add),drop(using add).dup(using prev))
+        //def extract(using NotGiven[n =:= Z.type]): T
+    
+    case object VNil extends VecIC[s.zero, Nothing]:
+        def take[i<:Int,j<:Int](using add : this.s.Add[i, j, s.zero]): VecIC[i,Nothing] = ???//add match
+            //case NAddZ(_) => VNil     
+        def drop[i<:Int,j<:Int](using add : this.s.Add[i, j, s.zero]): VecIC[j,Nothing] = ???//add match
+            //case NAddZ(_) => VNil
+    /*
+    case class VCons[n<:Nat,+T](hd : T, tl: Vec[n,T]) extends Vec[Suc[n], T] :
+        def take[i<:Int,j<:Int](using add : this.s.Add[i,j,Suc[n]]): VecIC[i,T] = add match 
+            case NAddZ(_) => VNil
+            case NAddStep(prev) => VCons(hd, tl.take(using prev))
+        def drop[i<:Int,j<:Int](using add : this.s.Add[i,j,Suc[n]]): VecIC[j,T] = add match
+            case NAddZ(_) => this
+            case NAddStep(prev) => tl.drop(using prev)
+    */
+    
+    class BnReuseShape extends IndexedComonad[Int, VecIC]:
+        def dup[i <: Int, j<: Int, n <: Int, T](d: VecIC[n, T])(using mul: this.s.Mul[i, j, n]): VecIC[i, VecIC[j, T]] = ???//mul match
+            ///case NMulZLeft(j)        => VNil
+            //case NMulStep(prev,add)  => VCons(take(using add),drop(using add).dup(using prev))
+        def extract[n <: Int, T](d: VecIC[n, T])(using NotGiven[n =:= this.s.zero]): T = ???
+        def map[n <: Int, A, B](d: VecIC[n, A], f: A => B): VecIC[n, B] = ???
