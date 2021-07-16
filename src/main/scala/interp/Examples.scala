@@ -42,24 +42,23 @@ object Vectors extends App:
         def take[i<:Int,j<:Int](using Add[i, j, n]): VecIC[i,T]
         def drop[i<:Int,j<:Int](using Add[i, j, n]): VecIC[j,T]
         def dup[i<:Int,j<:Int](using mul : Mul[i,j,n]): VecIC[i, VecIC[j,T]] = mul match
-            case _:NMulZLeft[_]        => VNil
+            case NMulZLeft()          => VNil
             case NMulStep(add, prev)  => VCons(take(using add),drop(using add).dup(using prev))
         //def extract(using NotGiven[n =:= Z.type]): T
 
 
     case object VNil extends VecIC[zero, Nothing]: 
         def take[i<:Int,j<:Int](using add : Add[i, j, zero]): VecIC[i,Nothing] = add match
-            //Will this work? How do I patttern Match case calss with no parameters
-            case _: NAddZ[_] => VNil
+            case NAddZ() => VNil
         def drop[i<:Int,j<:Int](using add : Add[i, j, zero]): VecIC[j,Nothing] = add match
-            case _: NAddZ[_] => VNil
+            case NAddZ() => VNil
         
     case class VCons[n<:Int,+T](hd : T, tl: VecIC[n,T]) extends VecIC[S[n], T]:
         def take[i<:Int,j<:Int](using add : Add[i,j,S[n]]): VecIC[i,T] = add match 
-            case _: NAddZ[_] => VNil
+            case NAddZ() => VNil
             case NAddStep(prev) => VCons(hd, tl.take(using prev))
         def drop[i<:Int,j<:Int](using add : Add[i,j,S[n]]): VecIC[j,T] = add match
-            case _: NAddZ[_] => this
+            case NAddZ() => this
             case NAddStep(prev) => tl.drop(using prev)
     
     
@@ -72,7 +71,17 @@ object Vectors extends App:
 
     class BnReuseShape extends IndexedComonad[Int, VecIC]:
         def dup[i <: Int, j<: Int, n <: Int, T](d: VecIC[n, T])(using mul: this.s.Mul[i, j, n]): VecIC[i, VecIC[j, T]] = mul match
-            case _: NMulZLeft[_]      => VNil
+            case NMulZLeft()          => 
+                //summon[VNil.type <:< VecIC[zero, Nothing]]
+                VNil
+                //VNil.asInstanceOf[VecIC[zero, Nothing]]
             case NMulStep(add, prev)  => VCons(d.take(using add),d.drop(using add).dup(using prev))
         def extract[n <: Int, T](d: VecIC[n, T])(using NotGiven[n =:= this.s.zero]): T = ???
         def map[n <: Int, A, B](d: VecIC[n, A], f: A => B): VecIC[n, B] = ???
+    
+    /**
+     * Why does 76 return type and not object?
+     * Found:    interp.Vectors.VecIC[interp.Scalars.natScalar.zero, Nothing] (line 77)
+     * Required: interp.Vectors.VecIC[i, interp.Vectors.VecIC[j, T]]
+     * Covariance and contravariance of VecIC (refer to line 68)
+     **/
