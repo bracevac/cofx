@@ -36,7 +36,7 @@ object DecompNew :
   **/
 
 
-  trait IndexedComonad[S, D[_ <:S, _]](using val s: CoeffScalar[S]):
+  trait IndexedComonad[S, D[_ <:S, _], C <: CoeffScalar[S]](using val s: C):
 
     def dup[i <: S, j <: S, n <: S, T](d: D[n, T])(using s.Mul[i, j, n]): D[i, D[j, T]]
     def extract[n <: S, T](d : D[n,T])(using NotGiven[n =:= s.zero]): T
